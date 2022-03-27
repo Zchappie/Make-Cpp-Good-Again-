@@ -31,7 +31,7 @@ ChatLogic::~ChatLogic() {
   ////
 
   // delete chatbot instance
-  delete _chatBot;
+  //delete _chatBot;
 
   //     delete all nodes
   for (auto it = std::begin(_nodes); it != std::end(_nodes); ++it) {
@@ -50,7 +50,7 @@ ChatLogic::~ChatLogic() {
 template <typename T>
 void ChatLogic::AddAllTokensToElement(std::string tokenID, tokenlist &tokens,
                                       T &element) {
-  // find all occurences for current node
+  // find all occurrences for current node
   auto token = tokens.begin();
   while (true) {
     token = std::find_if(
