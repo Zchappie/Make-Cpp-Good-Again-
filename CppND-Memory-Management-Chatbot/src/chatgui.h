@@ -88,7 +88,7 @@ public:
     DECLARE_EVENT_TABLE()
 };
 
-// wxWidgets app that hides main()
+// wxWidgets app that hides main(), everything starts here
 class ChatBotApp : public wxApp
 {
 public:
