@@ -30,6 +30,7 @@ ChatBot::ChatBot(std::string filename)
     _image = new wxBitmap(filename, wxBITMAP_TYPE_PNG);
 }
 
+// 1. destructor
 ChatBot::~ChatBot()
 {
     std::cout << "ChatBot Destructor" << std::endl;
@@ -42,11 +43,100 @@ ChatBot::~ChatBot()
     }
 }
 
-//// STUDENT CODE
-////
+// 2. copy constructor
+ChatBot::ChatBot(const ChatBot &source)
+{
+  // initialize all the fields and copy the source data
+  _image = new wxBitmap;
+  *_image = *source._image;
+  
+  _currentNode = new GraphNode(source._currentNode->GetID());
+  *_currentNode = *source._currentNode;
+  
+  _rootNode = new GraphNode(source._rootNode->GetID());
+  *_rootNode = *source._rootNode;
+  
+  _chatLogic = new ChatLogic();
+  *_chatLogic = *source._chatLogic;
+  
+  std::cout << "ChatBot Copy Constructor" << std::endl;
+}
 
-////
-//// EOF STUDENT CODE
+// 3. copy assignment operator
+ChatBot &ChatBot::operator=(const ChatBot &source)
+{
+  if (this == &source)
+  {
+    return *this;
+  }
+  delete _image;
+  delete _currentNode;
+  delete _rootNode;
+  delete _chatLogic;
+  
+  _image = new wxBitmap;
+  *_image = *source._image;
+  
+  _currentNode = new GraphNode(source._currentNode->GetID());
+  *_currentNode = *source._currentNode;
+  
+  _rootNode = new GraphNode(source._rootNode->GetID());
+  *_rootNode = *source._rootNode;
+  
+  _chatLogic = new ChatLogic();
+  *_chatLogic = *source._chatLogic;
+  
+  std::cout << "ChatBot Copy Assignment Constructor" << std::endl;
+  return *this;
+}
+
+// 4. move constructor
+ChatBot::ChatBot(ChatBot &&source) noexcept
+{
+  _image = source._image;
+  _currentNode = source._currentNode;
+  _rootNode = source._rootNode;
+  _chatLogic = source._chatLogic;
+  
+  source._image = nullptr;
+  source._currentNode = nullptr;
+  source._rootNode = nullptr;
+  source._chatLogic = nullptr;
+  std::cout << "ChatBot Move Constructor" << std::endl;
+}
+
+// 5. move assignment operator
+ChatBot &ChatBot::operator=(ChatBot &&source) noexcept
+{
+  if (this == &source)
+  {
+    return *this;
+  }
+  delete _image;
+  delete _currentNode;
+  delete _rootNode;
+  delete _chatLogic;
+  
+  _image = new wxBitmap;
+  *_image = *source._image;
+  
+  _currentNode = new GraphNode(source._currentNode->GetID());
+  *_currentNode = *source._currentNode;
+  
+  _rootNode = new GraphNode(source._rootNode->GetID());
+  *_rootNode = *source._rootNode;
+  
+  _chatLogic = new ChatLogic();
+  *_chatLogic = *source._chatLogic;
+  
+  source._image = nullptr;
+  source._currentNode = nullptr;
+  source._rootNode = nullptr;
+  source._chatLogic = nullptr;
+  std::cout << "ChatBot Move Assignment Constructor" << std::endl;
+  
+  return *this;
+}
 
 void ChatBot::ReceiveMessageFromUser(std::string message)
 {
