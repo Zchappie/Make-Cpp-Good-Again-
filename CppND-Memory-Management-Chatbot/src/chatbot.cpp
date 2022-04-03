@@ -50,14 +50,10 @@ ChatBot::ChatBot(const ChatBot &source)
   _image = new wxBitmap;
   *_image = *source._image;
   
-  _currentNode = new GraphNode(source._currentNode->GetID());
-  *_currentNode = *source._currentNode;
-  
-  _rootNode = new GraphNode(source._rootNode->GetID());
-  *_rootNode = *source._rootNode;
-  
-  _chatLogic = new ChatLogic();
-  *_chatLogic = *source._chatLogic;
+  _currentNode = source._currentNode;
+  _rootNode = source._rootNode;
+  _chatLogic = source._chatLogic;
+  _chatLogic->SetChatbotHandle(this);
   
   std::cout << "ChatBot Copy Constructor" << std::endl;
 }
@@ -70,21 +66,11 @@ ChatBot &ChatBot::operator=(const ChatBot &source)
     return *this;
   }
   delete _image;
-  delete _currentNode;
-  delete _rootNode;
-  delete _chatLogic;
-  
-  _image = new wxBitmap;
-  *_image = *source._image;
-  
-  _currentNode = new GraphNode(source._currentNode->GetID());
-  *_currentNode = *source._currentNode;
-  
-  _rootNode = new GraphNode(source._rootNode->GetID());
-  *_rootNode = *source._rootNode;
-  
-  _chatLogic = new ChatLogic();
-  *_chatLogic = *source._chatLogic;
+
+  _currentNode = source._currentNode;
+  _rootNode = source._rootNode;
+  _chatLogic = source._chatLogic;
+  _chatLogic->SetChatbotHandle(this);
   
   std::cout << "ChatBot Copy Assignment Constructor" << std::endl;
   return *this;
@@ -97,8 +83,9 @@ ChatBot::ChatBot(ChatBot &&source) noexcept
   _currentNode = source._currentNode;
   _rootNode = source._rootNode;
   _chatLogic = source._chatLogic;
-  
-  source._image = nullptr;
+  _chatLogic->SetChatbotHandle(this);
+	
+	source._image = nullptr;
   source._currentNode = nullptr;
   source._rootNode = nullptr;
   source._chatLogic = nullptr;
@@ -113,21 +100,12 @@ ChatBot &ChatBot::operator=(ChatBot &&source) noexcept
     return *this;
   }
   delete _image;
-  delete _currentNode;
-  delete _rootNode;
-  delete _chatLogic;
-  
-  _image = new wxBitmap;
-  *_image = *source._image;
-  
-  _currentNode = new GraphNode(source._currentNode->GetID());
-  *_currentNode = *source._currentNode;
-  
-  _rootNode = new GraphNode(source._rootNode->GetID());
-  *_rootNode = *source._rootNode;
-  
-  _chatLogic = new ChatLogic();
-  *_chatLogic = *source._chatLogic;
+	
+  _image = source._image;
+  _currentNode = source._currentNode;
+  _rootNode = source._rootNode;
+  _chatLogic = source._chatLogic;
+  _chatLogic->SetChatbotHandle(this);
   
   source._image = nullptr;
   source._currentNode = nullptr;
