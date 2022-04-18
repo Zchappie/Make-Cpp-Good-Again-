@@ -20,6 +20,19 @@ Throughout the Concurrency course, you have been developing a traffic simulation
   * Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
   * Windows: recommend using [MinGW](http://www.mingw.org/)
 
+## Install OpenCV on M1 Mac
+When first trial on build this project on my newly bought M1 MacOS machine, the `cmake` won't finish properly as the library OpenCV is not installed. Here is the instructions on how to do that in a M1 machine.
+
+Credits: [Open CV C++ Mac M1 Installation Tutorial Video](https://www.youtube.com/watch?v=KaTA-yK7dWA&ab_channel=GlebMaksimov)
+1. From terminal install `cmake` using homebrew: `brew install cmake`
+2. Clone, build, install OpenCV in a new folder *OPEN_CV*
+   - `git clone https://github.com/opencv/opencv.git`
+   - `mkdir build` in the folder *OPEN_CV*
+   - `cmake ../opencv/ .`
+   - `arch -arm64 cmake ../opencv/ -DWITH_QT=OFF -DWITH_OPENGL=OFF -DFORCE_VTK=OFF -DWITH_TBB=OFF -DWITH_GDAL=OFF -DWITH_XINE=OFF -DBUILD_EXAMPLES=OFF -DBUILD_ZLIB=OFF -DBUILD_TESTS=OFF .`
+   - `arch -arm64 sudo make -j 4`
+   - `arch -arm64 sudo make install`
+
 ## Basic Build Instructions
 
 1. Clone this repo.
