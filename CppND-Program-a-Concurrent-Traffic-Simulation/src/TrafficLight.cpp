@@ -24,7 +24,6 @@ void MessageQueue<T>::send(T &&msg)
 	std::lock_guard<std::mutex> gLock(_mutex);
 	
 	// add message to the queue
-	std::cout << " Traffic has changed to " << msg << std::endl;
 	_queue.push_back(std::move(msg));
 	_condVar.notify_one();
 }
