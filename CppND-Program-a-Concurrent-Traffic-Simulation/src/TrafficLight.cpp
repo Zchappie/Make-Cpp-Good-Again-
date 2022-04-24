@@ -54,5 +54,24 @@ void TrafficLight::cycleThroughPhases()
     // FP.2a : Implement the function with an infinite loop that measures the time between two loop cycles 
     // and toggles the current phase of the traffic light between red and green and sends an update method 
     // to the message queue using move semantics. The cycle duration should be a random value between 4 and 6 seconds. 
-    // Also, the while-loop should use std::this_thread::sleep_for to wait 1ms between two cycles. 
+    // Also, the while-loop should use std::this_thread::sleep_for to wait 1ms between two cycles.
+	
+	// duration of a single simulation cycle in ms, a random value between 4 and 6 seconds
+	double cycleDuration = (std::rand() % 2000) + 4000;
+	std::chrono::time_point<std::chrono::system_clock> lastUpdate;
+	
+	lastUpdate = std::chrono::system_clock::now();
+	while (true){
+		// sleep at every iteration to reduce CPU usage
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		
+		// compute time difference to stop watch
+		long timeSinceLastUpdate = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - lastUpdate).count();
+		if (timeSinceLastUpdate >= cycleDuration){
+			
+		}
+		
+		// rest stop watch for next cycle
+		lastUpdate = std::chrono::system_clock::now();
+	}
 }
