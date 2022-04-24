@@ -13,8 +13,8 @@ T MessageQueue<T>::receive()
 	_condVar.wait(uLock, [this] {return !_queue.empty(); });
 	
 	// pull the message
-	T msg = std::move(_queue.back());
-	_queue.pop_back();
+	T msg = std::move(_queue.front());
+	_queue.pop_front();
 	return msg;
 }
 
@@ -24,7 +24,7 @@ void MessageQueue<T>::send(T &&msg)
 	std::lock_guard<std::mutex> gLock(_mutex);
 	
 	// add message to the queue
-	_queue.push_back(std::move(msg));
+	_queue.emplace_back(std::move(msg));
 	_condVar.notify_one();
 }
 
@@ -59,7 +59,6 @@ void TrafficLight::simulate()
 	threads.emplace_back(std::thread(&TrafficLight::cycleThroughPhases, this));
 }
 
-// virtual function which is executed in a thread
 void TrafficLight::cycleThroughPhases()
 {
 	std::chrono::time_point<std::chrono::system_clock> lastUpdate;
@@ -69,22 +68,22 @@ void TrafficLight::cycleThroughPhases()
 		// sleep at every iteration to reduce CPU usage
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		
-		// duration of a single simulation cycle in ms, a random value between 4 and 6 seconds
 		std::random_device rd;
 		std::mt19937 eng(rd());
 		std::uniform_int_distribution<> distribution(4000, 6000);
 		auto cycleDuration = distribution(eng);
+		//std::cout << "Current cycle duration is " << cycleDuration << std::endl;
 		
 		// compute time difference to stop watch
 		long timeSinceLastUpdate = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - lastUpdate).count();
 		if (timeSinceLastUpdate >= cycleDuration){
+			
+			lastUpdate = std::chrono::system_clock::now();
 			
 			// traffic light phase toggles between red and greed
 			_currentPhase = (_currentPhase == TrafficLightPhase::red) ? TrafficLightPhase::green : TrafficLightPhase::red;
 			_messages.send(std::move(_currentPhase));
 		}
 		
-		// rest stop watch for next cycle
-		lastUpdate = std::chrono::system_clock::now();
 	}
 }
