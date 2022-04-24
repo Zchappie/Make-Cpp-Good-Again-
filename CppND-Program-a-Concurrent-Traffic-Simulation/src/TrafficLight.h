@@ -19,9 +19,11 @@ template <class T>
 class MessageQueue
 {
 public:
+	T receive();
+	void send(T &&msg);
 
 private:
-    
+
 };
 
 enum TrafficLightPhase{ red, green};
@@ -38,7 +40,7 @@ public:
 
     // typical behaviour methods
 		void waitForGreen();
-		void simulate();
+		void simulate() override;
 
 private:
     // typical behaviour methods
@@ -50,7 +52,8 @@ private:
 
     std::condition_variable _condition;
     std::mutex _mutex;
-		TrafficLightPhase _currentPhase;
+	TrafficLightPhase _currentPhase;
+	MessageQueue<TrafficLightPhase> _messages;
 };
 
 #endif
