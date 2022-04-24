@@ -13,8 +13,8 @@ template <class T>
 class MessageQueue
 {
 public:
-	void send(T &&msg);
 	T receive();
+	void send(T &&msg);
 
 private:
 	std::deque<T> _queue;
