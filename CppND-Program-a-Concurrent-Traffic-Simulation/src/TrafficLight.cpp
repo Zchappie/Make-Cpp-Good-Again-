@@ -23,7 +23,8 @@ void MessageQueue<T>::send(T &&msg)
 {
 	std::lock_guard<std::mutex> gLock(_mutex);
 	
-	// add message to the queue
+	// add message to the queue, and the queue should be cleared for peripheral lights (intersections with fewer traffics)
+	_queue.clear();
 	_queue.emplace_back(std::move(msg));
 	_condVar.notify_one();
 }
@@ -61,15 +62,18 @@ void TrafficLight::simulate()
 
 void TrafficLight::cycleThroughPhases()
 {
-	std::chrono::time_point<std::chrono::system_clock> lastUpdate;
+	std::unique_lock<std::mutex> lck(_mutex);
+	std::cout << "Traffic light #" << _id << "::cycleThroughPhases: thread id = " << std::this_thread::get_id() << std::endl;
+	lck.unlock();
 	
-	lastUpdate = std::chrono::system_clock::now();
 	std::random_device rd;
 	std::mt19937 eng(rd());
 	std::uniform_int_distribution<> distribution(4000, 6000);
 	auto cycleDuration = distribution(eng);
 	//std::cout << "Current cycle duration is " << cycleDuration << std::endl;
 	
+	std::chrono::time_point<std::chrono::system_clock> lastUpdate;
+	lastUpdate = std::chrono::system_clock::now();
 	while (true){
 		// sleep at every iteration to reduce CPU usage
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -78,7 +82,6 @@ void TrafficLight::cycleThroughPhases()
 		// compute time difference to stop watch
 		long timeSinceLastUpdate = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - lastUpdate).count();
 		if (timeSinceLastUpdate >= cycleDuration){
-			
 			
 			// traffic light phase toggles between red and greed
 			_currentPhase = (_currentPhase == TrafficLightPhase::red) ? TrafficLightPhase::green : TrafficLightPhase::red;
